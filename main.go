@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -35,11 +36,13 @@ var (
 )
 
 func main() {
-	if os.Getenv("ENVIRONMENT") == "Development" {
+	environment := strings.ToLower(os.Getenv("ENVIRONMENT"))
+
+	if environment == "development" {
 		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339})
 	}
 
-	godotenv.Load()
+	godotenv.Load(".env", ".env."+environment)
 
 	if err := envconfig.Process("", &config); err != nil {
 		log.Fatal().Err(err).Msg("Error loading configuration")
