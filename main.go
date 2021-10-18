@@ -86,7 +86,6 @@ func handlePostWebHook(w http.ResponseWriter, r *http.Request) {
 	payload, err := github.ValidatePayload(r, []byte(config.AppSecret))
 	if err != nil {
 		log.Warn().Err(err).Msg("Invalid payload signature")
-		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		return
 	}
 
