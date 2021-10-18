@@ -93,7 +93,11 @@ func handlePostWebHook(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(payload, &update)
 	if err != nil {
 		log.Warn().Err(err).Msg("Error decoding payload")
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		if serr, ok := err.(*json.SyntaxError); ok {
+			http.Error(w, serr.Error(), http.StatusBadRequest)
+			return
+		}
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
