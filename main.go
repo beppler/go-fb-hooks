@@ -38,8 +38,8 @@ var (
 func main() {
 	environment := strings.ToLower(os.Getenv("ENVIRONMENT"))
 
-	if environment == "development" {
-		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339})
+	if strings.EqualFold(environment, "development") {
+		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: time.RFC3339})
 	}
 
 	godotenv.Load(".env", ".env."+environment)
